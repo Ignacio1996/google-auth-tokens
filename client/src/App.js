@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+//usestate
+import React, { useState } from "react";
 
 function App() {
+  const createGoogleAuthLink = async () => {
+    try {
+      const request = await fetch("localhost:8080/createAuthLink");
+      const response = await request.json();
+      window.location.href = response.url;
+    } catch (error) {
+      throw new Error("Issue with Login", error.message);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Google</h1>
+      <button onClick={createGoogleAuthLink}>Login</button>
     </div>
   );
 }
