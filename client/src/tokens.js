@@ -1,12 +1,12 @@
 export const getToken = async () => {
-  console.log("tokens.js 1 | getting token");
   if (tokenExpired()) {
+    console.log("tokens.js 3 | token expired");
     const refreshtoken = sessionStorage.getItem("refreshToken");
     // get new token from server with refresh token
     const token = await getValidTokenFromServer(refreshtoken);
     // save token to local storage and add new expiration date
-    localStorage.setItem("accessToken", token.accessToken);
-    localStorage.setItem("expirationDate", token.expirationDate);
+    sessionStorage.setItem("accessToken", token.accessToken);
+    sessionStorage.setItem("expirationDate", token.expirationDate);
   } else {
     console.log("tokens.js 11 | token not expired");
     return sessionStorage.getItem("accessToken");
@@ -14,9 +14,16 @@ export const getToken = async () => {
 };
 
 const tokenExpired = () => {
-  const expirationDate = localStorage.getItem("expirationDate");
-  console.log("tokens.js 17 | expiration date", expirationDate);
+  const expirationDate = sessionStorage.getItem("expirationDate");
+
   const now = new Date();
+  console.log(
+    "tokens.js 17 | expiration date",
+    Date(expirationDate),
+    "now",
+    now
+  );
+
   if (now >= expirationDate) {
     console.log("tokens.js 16 | token expired");
     return true;
@@ -27,6 +34,7 @@ const tokenExpired = () => {
 
 const getValidTokenFromServer = async (refreshToken) => {
   // get new token from server
+  console.log("tokens.js 32 | getting a valid token", refreshToken);
   try {
     const request = await fetch("http://localhost:8080/getValidToken", {
       method: "POST",

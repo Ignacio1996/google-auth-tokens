@@ -27,14 +27,16 @@ function App() {
     const refreshToken = query.get("refreshToken");
     const expirationDate = query.get("expirationDate");
     if (accessToken && refreshToken && expirationDate) {
-      // save tokens on session storage
+      // save tokens on local storage
+      console.log("App.js 30 | expiration date", Date(expirationDate));
       setTokens(accessToken, refreshToken, expirationDate);
-      window.location.href = "/";
+      // cleans up url after getting tokens
+      // window.location.href = "/";
     }
   };
 
   const setTokens = async (token, refreshToken, expirationDate) => {
-    console.log("tokens.js | setting tokens");
+    console.log("tokens.js | setting tokens", expirationDate);
     sessionStorage.setItem("accessToken", token);
     sessionStorage.setItem("refreshToken", refreshToken);
     sessionStorage.setItem("expirationDate", expirationDate);

@@ -3,13 +3,15 @@ const express = require("express");
 const app = express();
 // dotenv
 require("dotenv").config();
+// body parser
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
 
 //cors
 const cors = require("cors");
 app.use(cors());
 
 // node-fetch
-const fetch = require("node-fetch");
 
 const { google } = require("googleapis");
 
@@ -18,6 +20,7 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_SECRET,
   "http://localhost:8080/handleGoogleRedirect" // server redirect url handler
 );
+const fetch = require("node-fetch");
 
 app.post("/createAuthLink", cors(), (req, res) => {
   console.log("server 22 | reached route");
@@ -38,7 +41,6 @@ app.get("/handleGoogleRedirect", async (req, res) => {
   const code = req.query.code;
   console.log("server 36 | code", code);
   // get access token
-
   oauth2Client.getToken(code, (err, tokens) => {
     if (err) {
       console.log("server 39 | error", err);
@@ -48,6 +50,12 @@ app.get("/handleGoogleRedirect", async (req, res) => {
     const refreshToken = tokens.refresh_token;
     const expirationDate = tokens.expiry_date;
 
+    console.log(
+      "server 52 | expiration date",
+      tokens.expiry_date,
+      Date(tokens.expiry_date)
+    );
+
     res.redirect(
       `http://localhost:3000?accessToken=${accessToken}&refreshToken=${refreshToken}&expirationDate=${expirationDate}`
     );
@@ -55,6 +63,7 @@ app.get("/handleGoogleRedirect", async (req, res) => {
 });
 
 app.post("/getValidToken", async (req, res) => {
+  console.log("server 57 | reached route", req.body);
   try {
     const request = await fetch("https://www.googleapis.com/oauth2/v4/token", {
       method: "POST",
@@ -68,11 +77,15 @@ app.post("/getValidToken", async (req, res) => {
         grant_type: "refresh_token",
       }),
     });
+
     const data = await request.json();
-    console.log("google.js 160 | data", data);
+
+    var expirationDate = new Date();
+    expirationDate.setHours(expirationDate.getHours() + 1);
+
     res.json({
       token: data.access_token,
-      expirationDate: data.expiry_date,
+      expirationDate,
     });
   } catch (error) {
     console.log("google.js 155 | error", error);
