@@ -15,6 +15,7 @@ export const getToken = async () => {
 
 const tokenExpired = () => {
   const expirationDate = localStorage.getItem("expirationDate");
+  console.log("tokens.js 17 | expiration date", expirationDate);
   const now = new Date();
   if (now >= expirationDate) {
     console.log("tokens.js 16 | token expired");
