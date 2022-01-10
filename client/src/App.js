@@ -27,11 +27,7 @@ function App() {
     const refreshToken = query.get("refreshToken");
     const expirationDate = query.get("expirationDate");
     if (accessToken && refreshToken && expirationDate) {
-      // save tokens on local storage
-      console.log("App.js 30 | expiration date", Date(expirationDate));
       setTokens(accessToken, refreshToken, expirationDate);
-      // cleans up url after getting tokens
-      // window.location.href = "/";
     }
   };
 

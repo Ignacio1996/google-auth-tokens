@@ -15,6 +15,11 @@ export const getToken = async () => {
 
 const tokenExpired = () => {
   const expirationDate = sessionStorage.getItem("expirationDate");
+  console.log(
+    "tokens.js 17 | expiration Date",
+    expirationDate,
+    Date(expirationDate)
+  );
 
   const now = new Date();
   console.log(
