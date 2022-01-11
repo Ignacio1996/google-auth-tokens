@@ -23,7 +23,6 @@ const oauth2Client = new google.auth.OAuth2(
 const fetch = require("node-fetch");
 
 app.post("/createAuthLink", cors(), (req, res) => {
-  console.log("server 22 | reached route");
   const url = oauth2Client.generateAuthUrl({
     access_type: "offline",
     scope: [
@@ -56,7 +55,6 @@ app.get("/handleGoogleRedirect", async (req, res) => {
 });
 
 app.post("/getValidToken", async (req, res) => {
-  console.log("server 57 | reached route", req.body);
   try {
     const request = await fetch("https://www.googleapis.com/oauth2/v4/token", {
       method: "POST",
@@ -78,12 +76,10 @@ app.post("/getValidToken", async (req, res) => {
       accessToken: data.access_token,
     });
   } catch (error) {
-    console.log("google.js 155 | error", error);
     res.json({ error: error.message });
   }
 });
 
-// initialize express server
 app.listen(process.env.PORT || 8080, () => {
   console.log("listening on port 8080");
 });

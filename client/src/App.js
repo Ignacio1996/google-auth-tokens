@@ -23,14 +23,13 @@ function App() {
   };
 
   const handleTokenFromQueryParams = () => {
-    // get url params
     const query = new URLSearchParams(window.location.search);
     const accessToken = query.get("accessToken");
     const refreshToken = query.get("refreshToken");
     const expirationDate = newExpirationDate();
     console.log("App.js 30 | expiration Date", expirationDate);
     if (accessToken && refreshToken) {
-      setTokens(accessToken, refreshToken, expirationDate);
+      storeTokenData(accessToken, refreshToken, expirationDate);
       setIsLoggedIn(true);
     }
   };
@@ -41,7 +40,7 @@ function App() {
     return expiration;
   };
 
-  const setTokens = async (token, refreshToken, expirationDate) => {
+  const storeTokenData = async (token, refreshToken, expirationDate) => {
     sessionStorage.setItem("accessToken", token);
     sessionStorage.setItem("refreshToken", refreshToken);
     sessionStorage.setItem("expirationDate", expirationDate);
