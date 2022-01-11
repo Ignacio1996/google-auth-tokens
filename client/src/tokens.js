@@ -4,32 +4,32 @@ export const getToken = async () => {
     const refreshtoken = sessionStorage.getItem("refreshToken");
     // get new token from server with refresh token
     const token = await getValidTokenFromServer(refreshtoken);
+    console.log("tokens.js 6 | token", token);
     // save token to local storage and add new expiration date
     sessionStorage.setItem("accessToken", token.accessToken);
-    sessionStorage.setItem("expirationDate", token.expirationDate);
+    sessionStorage.setItem("expirationDate", newExpirationDate());
+    return token.accessToken;
   } else {
     console.log("tokens.js 11 | token not expired");
     return sessionStorage.getItem("accessToken");
   }
 };
 
+const newExpirationDate = () => {
+  var expiration = new Date();
+  expiration.setHours(expiration.getHours() + 1);
+  return expiration;
+};
+
 const tokenExpired = () => {
+  const now = Date.now();
+
   const expirationDate = sessionStorage.getItem("expirationDate");
-  console.log(
-    "tokens.js 17 | expiration Date",
-    expirationDate,
-    Date(expirationDate)
-  );
+  const expDate = new Date(expirationDate);
 
-  const now = new Date();
-  console.log(
-    "tokens.js 17 | expiration date",
-    Date(expirationDate),
-    "now",
-    now
-  );
+  console.log("tokens.js 26 | now vs expiration date", now, expDate.getTime());
 
-  if (now >= expirationDate) {
+  if (now > expDate.getTime()) {
     console.log("tokens.js 16 | token expired");
     return true;
   }

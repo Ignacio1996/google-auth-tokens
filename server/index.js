@@ -48,16 +48,9 @@ app.get("/handleGoogleRedirect", async (req, res) => {
     }
     const accessToken = tokens.access_token;
     const refreshToken = tokens.refresh_token;
-    const expirationDate = tokens.expiry_date;
-
-    console.log(
-      "server 52 | expiration date",
-      tokens.expiry_date,
-      Date(tokens.expiry_date)
-    );
 
     res.redirect(
-      `http://localhost:3000?accessToken=${accessToken}&refreshToken=${refreshToken}&expirationDate=${expirationDate}`
+      `http://localhost:3000?accessToken=${accessToken}&refreshToken=${refreshToken}`
     );
   });
 });
@@ -79,13 +72,10 @@ app.post("/getValidToken", async (req, res) => {
     });
 
     const data = await request.json();
-
-    var expirationDate = new Date();
-    expirationDate.setHours(expirationDate.getHours() + 1);
+    console.log("server 74 | data", data.access_token);
 
     res.json({
-      token: data.access_token,
-      expirationDate,
+      accessToken: data.access_token,
     });
   } catch (error) {
     console.log("google.js 155 | error", error);
